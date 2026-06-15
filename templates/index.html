@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CF Lookup - Dashboard</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body class="light-mode">
+
+    <script>
+        // Checks memory before rendering to prevent the screen from flashing white
+        if (localStorage.getItem('cf-theme') === 'dark') {
+            document.body.classList.replace('light-mode', 'dark-mode');
+        }
+    </script>
+
+    <div class="landing-container">
+        
+        <i class="ph ph-chart-polar landing-icon"></i>
+        <h1 class="landing-title">CF Analytics Dashboard</h1>
+        <p class="landing-subtitle">Track rating progression, analyze your contest history, and compare Codeforces profiles in one sleek interface.</p>
+
+        {% if error %}
+            <div style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px 24px; border-radius: 12px; margin-bottom: 25px; font-weight: 600; border: 1px solid rgba(239, 68, 68, 0.3);">
+                <i class="ph ph-warning-circle"></i> {{ error }}
+            </div>
+        {% endif %}
+
+        <form
+    action="/profile"
+    method="POST"
+    class="search-form"
+    id="searchForm">
+    <p
+    id="loadingText"
+    style="
+        display:none;
+        margin-top:15px;
+        color:#818cf8;
+        font-weight:600;
+    ">
+    Fetching profile...
+</p>
+            <input 
+                type="text" 
+                name="username" 
+                placeholder="Enter Codeforces handle..." 
+                required 
+                class="hero-input"
+                autocomplete="off"
+            >
+            <button type="submit" class="hero-btn">
+                <i class="ph ph-magnifying-glass"></i> Search
+            </button>
+        </form>
+
+        <button id="openModal" class="hero-btn compare-trigger">
+            <i class="ph ph-swords"></i>Compare Two Users
+        </button>
+
+    </div>
+
+    <div class="theme-switch">
+    <i
+        class="ph ph-moon"
+        id="themeToggle"
+        title="Toggle Theme">
+    </i>
+</div>
+
+    <div id="compareModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal">&times;</span>
+            <h2>Battle of the Coders ⚔️</h2>
+            <form action="/compare" method="POST" class="modal-form">
+                <input 
+                    type="text" 
+                    name="user1" 
+                    placeholder="First Handle (e.g. tourist)" 
+                    required 
+                    class="hero-input"
+                    autocomplete="off"
+                >
+                <input 
+                    type="text" 
+                    name="user2" 
+                    placeholder="Second Handle (e.g. Benq)" 
+                    required 
+                    class="hero-input"
+                    autocomplete="off"
+                >
+                <button type="submit" class="hero-btn" style="justify-content: center; margin-top: 10px;">
+                    Start Match
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- MODAL LOGIC ---
+        const modal = document.getElementById("compareModal");
+        const openBtn = document.getElementById("openModal");
+        const closeBtn = document.getElementById("closeModal");
+
+        openBtn.onclick = function () { modal.style.display = "block"; }
+        closeBtn.onclick = function () { modal.style.display = "none"; }
+        window.onclick = function (event) {
+            if (event.target == modal) { modal.style.display = "none"; }
+        }
+
+        // --- STEP 2: UPGRADED THEME TOGGLE LOGIC ---
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Fix the moon/sun icon on load if dark mode is active in memory
+        if (localStorage.getItem('cf-theme') === 'dark' && themeToggle) {
+            themeToggle.classList.replace('ph-moon', 'ph-sun');
+        }
+
+        // Listen for clicks and save the choice to memory
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                if (body.classList.contains('light-mode')) {
+                    
+                    // Switch to Dark Mode
+                    body.classList.replace('light-mode', 'dark-mode');
+                    themeToggle.classList.replace('ph-moon', 'ph-sun');
+                    localStorage.setItem('cf-theme', 'dark'); // Save to memory
+                    
+                } else {
+                    
+                    // Switch to Light Mode
+                    body.classList.replace('dark-mode', 'light-mode');
+                    themeToggle.classList.replace('ph-sun', 'ph-moon');
+                    localStorage.setItem('cf-theme', 'light'); // Save to memory
+                    
+                }
+            });
+        }
+
+        const searchForm = document.getElementById("searchForm");
+        const loadingText = document.getElementById("loadingText");
+
+        if (searchForm) {
+            searchForm.addEventListener("submit", () => {
+                if (loadingText) {
+                    loadingText.style.display = "block";
+                }
+            });
+        }
+    </script>
+    <footer class="footer">
+    <p>
+        Developed by <strong>Parnabha</strong>
+    </p>
+
+    <p>
+        Built with Flask & Codeforces API
+    </p>
+</footer>
+</body>
+</html>
