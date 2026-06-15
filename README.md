@@ -43,7 +43,7 @@ A modern and interactive Codeforces analytics dashboard built using Flask and th
 ## Project Structure
 
 ```text
-cp-dashboard/
+CF-Analytics-Dashboard/
 │
 ├── app.py
 ├── requirements.txt
