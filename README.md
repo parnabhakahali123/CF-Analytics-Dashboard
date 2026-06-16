@@ -67,8 +67,8 @@ CF-Analytics-Dashboard/
 Clone the repository:
 
 ```bash
-git clone <repository-url>
-cd cp-dashboard
+git clone https://github.com/parnabhakahali123/CF-Analytics-Dashboard
+cd CF-Analytics-Dashboard
 ```
 
 Install dependencies:
